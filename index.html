@@ -1,0 +1,748 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TWSCraft | Minecraft</title>
+    <meta name="description" content="Welcome to TWSCraft - Minecraft, gaming and more!">
+    <meta name="theme-color" content="#16a34a">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            background:
+                linear-gradient(rgba(5, 12, 8, .82), rgba(5, 12, 8, .95)),
+                radial-gradient(circle at 50% 0%, #164e2b 0%, #07130b 55%, #030705 100%);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Minecraft-style background blocks */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            opacity: .12;
+            background-image:
+                linear-gradient(90deg, transparent 95%, #ffffff 95%),
+                linear-gradient(0deg, transparent 95%, #ffffff 95%);
+            background-size: 64px 64px;
+            z-index: -1;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* NAVIGATION */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 7%;
+            background: rgba(3, 8, 5, .82);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255,255,255,.08);
+            z-index: 1000;
+        }
+
+        .nav-logo {
+            font-family: "Press Start 2P", monospace;
+            font-size: 18px;
+            color: #4ade80;
+            text-shadow: 3px 3px 0 #14532d;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #d1d5db;
+            font-weight: 600;
+            transition: .2s;
+        }
+
+        .nav-links a:hover {
+            color: #4ade80;
+        }
+
+        .nav-youtube {
+            padding: 10px 17px;
+            border-radius: 8px;
+            background: #dc2626;
+            color: white !important;
+        }
+
+        .nav-youtube:hover {
+            background: #ef4444;
+            transform: translateY(-2px);
+        }
+
+        /* HERO */
+        .hero {
+            min-height: 800px;
+            padding: 150px 7% 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 900px;
+        }
+
+        .pixel-label {
+            display: inline-block;
+            font-family: "Press Start 2P", monospace;
+            font-size: 11px;
+            color: #86efac;
+            background: rgba(22, 163, 74, .15);
+            border: 1px solid rgba(74, 222, 128, .3);
+            padding: 12px 18px;
+            margin-bottom: 28px;
+            border-radius: 5px;
+        }
+
+        .hero h1 {
+            font-family: "Press Start 2P", monospace;
+            font-size: clamp(38px, 8vw, 90px);
+            line-height: 1.25;
+            color: white;
+            text-shadow:
+                6px 6px 0 #14532d,
+                10px 10px 0 rgba(0,0,0,.45);
+            margin-bottom: 25px;
+        }
+
+        .hero h1 span {
+            color: #4ade80;
+        }
+
+        .hero p {
+            color: #d1d5db;
+            font-size: 20px;
+            line-height: 1.7;
+            max-width: 680px;
+            margin: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 35px;
+            flex-wrap: wrap;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px 24px;
+            border-radius: 8px;
+            font-weight: 800;
+            transition: .2s;
+        }
+
+        .button:hover {
+            transform: translateY(-3px);
+        }
+
+        .youtube-button {
+            background: #ef4444;
+            box-shadow: 0 8px 25px rgba(239,68,68,.25);
+        }
+
+        .youtube-button:hover {
+            background: #dc2626;
+        }
+
+        .about-button {
+            background: rgba(255,255,255,.08);
+            border: 1px solid rgba(255,255,255,.15);
+        }
+
+        .about-button:hover {
+            background: rgba(255,255,255,.14);
+        }
+
+        /* FLOATING BLOCKS */
+        .block {
+            position: absolute;
+            width: 65px;
+            height: 65px;
+            background: linear-gradient(135deg, #22c55e, #15803d);
+            border: 5px solid #14532d;
+            box-shadow: inset 8px 8px rgba(255,255,255,.12);
+            opacity: .35;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .block.one {
+            left: 8%;
+            top: 28%;
+        }
+
+        .block.two {
+            right: 10%;
+            top: 25%;
+            animation-delay: 1.5s;
+        }
+
+        .block.three {
+            left: 18%;
+            bottom: 12%;
+            animation-delay: 3s;
+        }
+
+        .block.four {
+            right: 20%;
+            bottom: 17%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-25px) rotate(5deg);
+            }
+        }
+
+        /* SECTION */
+        section {
+            padding: 100px 7%;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 55px;
+        }
+
+        .section-title h2 {
+            font-size: 42px;
+            margin-bottom: 12px;
+        }
+
+        .section-title p {
+            color: #9ca3af;
+            font-size: 17px;
+        }
+
+        /* VIDEOS */
+        .videos {
+            background: rgba(0,0,0,.18);
+        }
+
+        .video-feature {
+            max-width: 1100px;
+            margin: auto;
+            background: rgba(255,255,255,.045);
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 18px;
+            padding: 20px;
+            box-shadow: 0 25px 70px rgba(0,0,0,.25);
+        }
+
+        .video-frame {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            overflow: hidden;
+            border-radius: 12px;
+            background: #000;
+        }
+
+        .video-frame iframe {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .video-placeholder {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background:
+                linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.75)),
+                linear-gradient(135deg, #166534, #052e16);
+            text-align: center;
+            padding: 25px;
+        }
+
+        .video-placeholder .play {
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: #ef4444;
+            font-size: 30px;
+            margin-bottom: 20px;
+        }
+
+        .video-placeholder h3 {
+            font-size: 25px;
+            margin-bottom: 10px;
+        }
+
+        .video-placeholder p {
+            color: #d1d5db;
+        }
+
+        /* ABOUT */
+        .about-container {
+            max-width: 1050px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .card {
+            background: rgba(255,255,255,.045);
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 16px;
+            padding: 35px;
+        }
+
+        .card h3 {
+            font-size: 25px;
+            margin-bottom: 15px;
+            color: #86efac;
+        }
+
+        .card p {
+            color: #cbd5e1;
+            line-height: 1.8;
+        }
+
+        /* SOCIAL */
+        .social {
+            text-align: center;
+            background:
+                linear-gradient(rgba(20,83,45,.18), rgba(20,83,45,.04));
+        }
+
+        .social-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .social-button {
+            min-width: 150px;
+            padding: 14px 20px;
+            border-radius: 9px;
+            background: rgba(255,255,255,.07);
+            border: 1px solid rgba(255,255,255,.1);
+            font-weight: 700;
+            transition: .2s;
+        }
+
+        .social-button:hover {
+            background: rgba(74,222,128,.15);
+            border-color: #4ade80;
+            transform: translateY(-3px);
+        }
+
+        /* FOOTER */
+        footer {
+            border-top: 1px solid rgba(255,255,255,.08);
+            padding: 35px 7%;
+            text-align: center;
+            color: #6b7280;
+            background: #030705;
+        }
+
+        footer strong {
+            color: #4ade80;
+        }
+
+        /* MOBILE */
+        @media (max-width: 750px) {
+            nav {
+                padding: 0 5%;
+            }
+
+            .nav-logo {
+                font-size: 13px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                min-height: 700px;
+                padding: 130px 5% 70px;
+            }
+
+            .hero h1 {
+                font-size: 35px;
+            }
+
+            .hero p {
+                font-size: 17px;
+            }
+
+            section {
+                padding: 75px 5%;
+            }
+
+            .section-title h2 {
+                font-size: 32px;
+            }
+
+            .about-container {
+                grid-template-columns: 1fr;
+            }
+
+            .block {
+                transform: scale(.6);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!--
+        =========================================================
+        TWSCraft WEBSITE SETTINGS
+        =========================================================
+
+        Replace this with the REAL TWSCraft YouTube channel URL.
+
+        Example:
+        https://www.youtube.com/@TWSCraft
+
+        =========================================================
+    -->
+
+    <script>
+        const CHANNEL_URL = "https://www.youtube.com/@TWSCraft";
+    </script>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <a href="#" class="nav-logo">TWSCraft</a>
+
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#videos">Videos</a>
+            <a href="#about">About</a>
+            <a href="#social">Socials</a>
+            <a id="navYoutube" class="nav-youtube" href="#" target="_blank">
+                ▶ YouTube
+            </a>
+        </div>
+    </nav>
+
+
+    <!-- HERO -->
+    <main id="home">
+
+        <section class="hero">
+
+            <div class="block one"></div>
+            <div class="block two"></div>
+            <div class="block three"></div>
+            <div class="block four"></div>
+
+            <div class="hero-content">
+
+                <div class="pixel-label">
+                    ⛏ MINECRAFT CREATOR
+                </div>
+
+                <h1>
+                    <span>TWS</span>Craft
+                </h1>
+
+                <p>
+                    Welcome to TWSCraft!
+                    Minecraft, gaming, adventures and awesome videos
+                    all in one place.
+                </p>
+
+                <div class="hero-buttons">
+
+                    <a id="heroYoutube"
+                       href="#"
+                       target="_blank"
+                       class="button youtube-button">
+                        ▶ Watch on YouTube
+                    </a>
+
+                    <a href="#videos"
+                       class="button about-button">
+                        🎬 Explore Videos
+                    </a>
+
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- VIDEOS -->
+        <section id="videos" class="videos">
+
+            <div class="section-title">
+                <h2>Latest Videos</h2>
+                <p>Check out the latest content from TWSCraft.</p>
+            </div>
+
+            <div class="video-feature">
+
+                <div class="video-frame">
+
+                    <!--
+                        OPTIONAL:
+                        Replace the placeholder below with a YouTube iframe.
+
+                        Example:
+
+                        <iframe
+                            src="https://www.youtube.com/embed/VIDEO_ID"
+                            allowfullscreen>
+                        </iframe>
+                    -->
+
+                    <div class="video-placeholder">
+
+                        <div class="play">▶</div>
+
+                        <h3>TWSCraft on YouTube</h3>
+
+                        <p>
+                            Click below to watch the latest TWSCraft videos.
+                        </p>
+
+                        <a id="videoYoutube"
+                           href="#"
+                           target="_blank"
+                           class="button youtube-button"
+                           style="margin-top:20px;">
+                            Open YouTube Channel
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ABOUT -->
+        <section id="about">
+
+            <div class="section-title">
+                <h2>About TWSCraft</h2>
+                <p>The official TWSCraft website.</p>
+            </div>
+
+            <div class="about-container">
+
+                <div class="card">
+                    <h3>🎮 Gaming</h3>
+
+                    <p>
+                        Welcome to TWSCraft!
+                        This website is the home of the TWSCraft
+                        YouTube channel and its gaming content.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>⛏ Minecraft</h3>
+
+                    <p>
+                        Minecraft is at the heart of TWSCraft.
+                        Follow the channel for new adventures,
+                        builds, gameplay and more.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>🔥 New Content</h3>
+
+                    <p>
+                        Stay connected with the channel so you
+                        don't miss new videos, adventures and
+                        special projects.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>❤️ Community</h3>
+
+                    <p>
+                        Thanks for being part of the TWSCraft
+                        community. Subscribe and join the adventure!
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- SOCIAL -->
+        <section id="social" class="social">
+
+            <div class="section-title">
+                <h2>Join TWSCraft</h2>
+
+                <p>
+                    Follow TWSCraft and stay up to date.
+                </p>
+            </div>
+
+            <div class="social-buttons">
+
+                <a id="socialYoutube"
+                   href="#"
+                   target="_blank"
+                   class="social-button">
+                    ▶ YouTube
+                </a>
+
+                <a href="#"
+                   class="social-button"
+                   onclick="alert('Add your Discord link in the HTML!'); return false;">
+                    💬 Discord
+                </a>
+
+                <a href="#"
+                   class="social-button"
+                   onclick="alert('Add your social-media link in the HTML!'); return false;">
+                    🌐 Socials
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer>
+
+        <p>
+            © <span id="year"></span>
+            <strong>TWSCraft</strong>.
+            All rights reserved.
+        </p>
+
+        <p style="margin-top:10px;">
+            Not affiliated with Mojang or Microsoft.
+        </p>
+
+    </footer>
+
+
+    <script>
+
+        /*
+         * Automatically applies the YouTube channel URL
+         * to every YouTube button on the website.
+         */
+
+        document.getElementById("navYoutube").href = CHANNEL_URL;
+        document.getElementById("heroYoutube").href = CHANNEL_URL;
+        document.getElementById("videoYoutube").href = CHANNEL_URL;
+        document.getElementById("socialYoutube").href = CHANNEL_URL;
+
+        /*
+         * Current year
+         */
+
+        document.getElementById("year").textContent =
+            new Date().getFullYear();
+
+
+        /*
+         * Small scroll animation
+         */
+
+        const cards = document.querySelectorAll(".card");
+
+        const observer = new IntersectionObserver(
+            entries => {
+
+                entries.forEach(entry => {
+
+                    if (entry.isIntersecting) {
+
+                        entry.target.style.opacity = "1";
+                        entry.target.style.transform = "translateY(0)";
+
+                    }
+
+                });
+
+            },
+            {
+                threshold: 0.15
+            }
+        );
+
+        cards.forEach(card => {
+
+            card.style.opacity = "0";
+            card.style.transform = "translateY(25px)";
+            card.style.transition =
+                "opacity .6s ease, transform .6s ease";
+
+            observer.observe(card);
+
+        });
+
+    </script>
+
+</body>
+</html>
+```
